@@ -16,3 +16,13 @@ body {
     left: 0;
     outline: none;
 }
+
+
+
+
+
+#pane {
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.5rem;
+}

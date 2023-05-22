@@ -8,7 +8,9 @@ import {Pane} from 'tweakpane'
 const canvas = document.querySelector('canvas.webgl')
 
 // Pane
-const pane = new Pane()
+const pane = new Pane({
+  container: document.getElementById('pane'),
+})
 const PARAMS = {
   bgColor: 0x6B6AB3,
   ambLightInt: 1,
