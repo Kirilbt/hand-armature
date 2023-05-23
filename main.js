@@ -11,9 +11,17 @@ const canvas = document.querySelector('canvas.webgl')
 const pane = new Pane({
   container: document.getElementById('pane'),
 })
+const colors = pane.addFolder({
+  title: 'Colors',
+});
+const hand = pane.addFolder({
+  title: '✋✊',
+})
 const PARAMS = {
   bgColor: 0x6B6AB3,
-  ambLightInt: 1,
+  hand: 0xE7A183,
+  shirt: 0x303030,
+  vest: 0xE7D55C,
   wrist: 0.1,
   thumb: 0.25,
   index: 0.25,
@@ -22,52 +30,18 @@ const PARAMS = {
   pinky: 0.25
 }
 
-const s = pane.addFolder({
-  title: 'Scene',
-  expanded: true,
-})
-s.addInput(PARAMS, 'bgColor', {
+colors.addInput(PARAMS, 'bgColor', {
   view: 'color',
+  picker: 'inline',
+  expanded: false,
 }).on('change', (ev) => {
   scene.background.set(ev.value)
-})
-s.addInput(PARAMS, 'ambLightInt',
-  {min: 0, max: 2, step: 0.01}
-)
-  .on('change', (ev) => {
-  ambientLight.intensity = (ev.value)
-})
-
-const h = pane.addFolder({
-  title: 'Hand',
-  expanded: true,
 })
 
 // Scene
 const scene = new THREE.Scene()
 const bgColor = new THREE.Color(PARAMS.bgColor)
 scene.background = bgColor
-
-// // Env Map
-// const textureLoader = new THREE.TextureLoader()
-// const texturePosX = textureLoader.load('/env/px.png')
-// const textureNegX = textureLoader.load('/env/nx.png')
-// const texturePosY = textureLoader.load('/env/py.png')
-// const textureNegY = textureLoader.load('/env/ny.png')
-// const texturePosZ = textureLoader.load('/env/pz.png')
-// const textureNegZ = textureLoader.load('/env/nz.png')
-
-// const cubeTextureLoader = new THREE.CubeTextureLoader()
-// const environmentMap = cubeTextureLoader.load([
-//   texturePosX,
-//   textureNegX,
-//   texturePosY,
-//   textureNegY,
-//   texturePosZ,
-//   textureNegZ
-// ])
-
-// console.log(cubeTextureLoader)
 
 /**
  * Models
@@ -97,9 +71,8 @@ const updateMaterials = () => {
   const handMaterial = new THREE.MeshStandardMaterial()
   handMaterial.color = new THREE.Color(0xE7A183)
   handMaterial.roughness = 0.7
-  handMaterial.emissive = new THREE.Color(0xff0000)
-  handMaterial.emissiveIntensity = 0.2
-  // handMaterial.envMap = environmentMap
+  // handMaterial.emissive = new THREE.Color(0xff0000)
+  // handMaterial.emissiveIntensity = 0.2
   scene.getObjectByName('Hand').material = handMaterial
 
   const shirtMaterial = new THREE.MeshStandardMaterial()
@@ -109,6 +82,30 @@ const updateMaterials = () => {
   const vestMaterial = new THREE.MeshStandardMaterial()
   vestMaterial.color = new THREE.Color(0xE7D55C)
   scene.getObjectByName('Vest').material = vestMaterial
+
+
+  // Pane
+  colors.addInput(PARAMS, 'hand', {
+    view: 'color',
+    picker: 'inline',
+    expanded: false,
+  }).on('change', (ev) => {
+    handMaterial.color = new THREE.Color(ev.value)
+  })
+  colors.addInput(PARAMS, 'shirt', {
+    view: 'color',
+    picker: 'inline',
+    expanded: false,
+  }).on('change', (ev) => {
+    shirtMaterial.color = new THREE.Color(ev.value)
+  })
+  colors.addInput(PARAMS, 'vest', {
+    view: 'color',
+    picker: 'inline',
+    expanded: false,
+  }).on('change', (ev) => {
+    vestMaterial.color = new THREE.Color(ev.value)
+  })
 }
 
 const updateBones = () => {
@@ -165,7 +162,7 @@ const updateBones = () => {
   // console.log(scene.getObjectByName('Hand').skeleton)
 
   // PANE
-  h.addInput(PARAMS, 'wrist',
+  hand.addInput(PARAMS, 'wrist',
   {min: -0.4, max: 0.4, step: 0.01}
   )
   .on('change', (ev) => {
@@ -179,7 +176,7 @@ const updateBones = () => {
   })
 
 
-  h.addInput(PARAMS, 'thumb',
+  hand.addInput(PARAMS, 'thumb',
   {min: 0, max: 0.9, step: 0.01}
   )
   .on('change', (ev) => {
@@ -188,7 +185,7 @@ const updateBones = () => {
     thumb3.rotation.x = (ev.value)
   })
 
-  h.addInput(PARAMS, 'index',
+  hand.addInput(PARAMS, 'index',
   {min: 0, max: 1.1, step: 0.01}
   )
   .on('change', (ev) => {
@@ -197,7 +194,7 @@ const updateBones = () => {
     index3.rotation.x = (ev.value)
   })
 
-  h.addInput(PARAMS, 'middle',
+  hand.addInput(PARAMS, 'middle',
   {min: 0, max: 1.1, step: 0.01}
   )
   .on('change', (ev) => {
@@ -206,7 +203,7 @@ const updateBones = () => {
     middle3.rotation.x = (ev.value)
   })
 
-  h.addInput(PARAMS, 'ring',
+  hand.addInput(PARAMS, 'ring',
   {min: 0, max: 1.1, step: 0.01}
   )
   .on('change', (ev) => {
@@ -215,7 +212,7 @@ const updateBones = () => {
     ring3.rotation.x = (ev.value)
   })
 
-  h.addInput(PARAMS, 'pinky',
+  hand.addInput(PARAMS, 'pinky',
   {min: 0, max: 1.1, step: 0.01}
   )
   .on('change', (ev) => {
