@@ -71,8 +71,8 @@ const updateMaterials = () => {
   const handMaterial = new THREE.MeshStandardMaterial()
   handMaterial.color = new THREE.Color(0xE7A183)
   handMaterial.roughness = 0.7
-  // handMaterial.emissive = new THREE.Color(0xff0000)
-  // handMaterial.emissiveIntensity = 0.2
+  handMaterial.emissive = new THREE.Color(0xff0000)
+  handMaterial.emissiveIntensity = 0.2
   scene.getObjectByName('Hand').material = handMaterial
 
   const shirtMaterial = new THREE.MeshStandardMaterial()
@@ -91,6 +91,7 @@ const updateMaterials = () => {
     expanded: false,
   }).on('change', (ev) => {
     handMaterial.color = new THREE.Color(ev.value)
+    handMaterial.emissiveIntensity = 0
   })
   tab.pages[1].addInput(PARAMS, 'shirt', {
     view: 'color',
