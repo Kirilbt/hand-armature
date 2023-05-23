@@ -11,14 +11,14 @@ const canvas = document.querySelector('canvas.webgl')
 const pane = new Pane({
   container: document.getElementById('pane'),
 })
-const colors = pane.addFolder({
-  title: 'Colors',
-});
-const hand = pane.addFolder({
-  title: '✋✊',
+const tab = pane.addTab({
+  pages: [
+    {title: 'Hand 🤟'},
+    {title: 'Colors 🎨'},
+  ],
 })
 const PARAMS = {
-  bgColor: 0x6B6AB3,
+  bg: 0x6B6AB3,
   hand: 0xE7A183,
   shirt: 0x303030,
   vest: 0xE7D55C,
@@ -30,7 +30,7 @@ const PARAMS = {
   pinky: 0.25
 }
 
-colors.addInput(PARAMS, 'bgColor', {
+tab.pages[1].addInput(PARAMS, 'bg', {
   view: 'color',
   picker: 'inline',
   expanded: false,
@@ -40,7 +40,7 @@ colors.addInput(PARAMS, 'bgColor', {
 
 // Scene
 const scene = new THREE.Scene()
-const bgColor = new THREE.Color(PARAMS.bgColor)
+const bgColor = new THREE.Color(PARAMS.bg)
 scene.background = bgColor
 
 /**
@@ -85,21 +85,21 @@ const updateMaterials = () => {
 
 
   // Pane
-  colors.addInput(PARAMS, 'hand', {
+  tab.pages[1].addInput(PARAMS, 'hand', {
     view: 'color',
     picker: 'inline',
     expanded: false,
   }).on('change', (ev) => {
     handMaterial.color = new THREE.Color(ev.value)
   })
-  colors.addInput(PARAMS, 'shirt', {
+  tab.pages[1].addInput(PARAMS, 'shirt', {
     view: 'color',
     picker: 'inline',
     expanded: false,
   }).on('change', (ev) => {
     shirtMaterial.color = new THREE.Color(ev.value)
   })
-  colors.addInput(PARAMS, 'vest', {
+  tab.pages[1].addInput(PARAMS, 'vest', {
     view: 'color',
     picker: 'inline',
     expanded: false,
@@ -162,7 +162,7 @@ const updateBones = () => {
   // console.log(scene.getObjectByName('Hand').skeleton)
 
   // PANE
-  hand.addInput(PARAMS, 'wrist',
+  tab.pages[0].addInput(PARAMS, 'wrist',
   {min: -0.4, max: 0.4, step: 0.01}
   )
   .on('change', (ev) => {
@@ -176,7 +176,7 @@ const updateBones = () => {
   })
 
 
-  hand.addInput(PARAMS, 'thumb',
+  tab.pages[0].addInput(PARAMS, 'thumb',
   {min: 0, max: 0.9, step: 0.01}
   )
   .on('change', (ev) => {
@@ -185,7 +185,7 @@ const updateBones = () => {
     thumb3.rotation.x = (ev.value)
   })
 
-  hand.addInput(PARAMS, 'index',
+  tab.pages[0].addInput(PARAMS, 'index',
   {min: 0, max: 1.1, step: 0.01}
   )
   .on('change', (ev) => {
@@ -194,7 +194,7 @@ const updateBones = () => {
     index3.rotation.x = (ev.value)
   })
 
-  hand.addInput(PARAMS, 'middle',
+  tab.pages[0].addInput(PARAMS, 'middle',
   {min: 0, max: 1.1, step: 0.01}
   )
   .on('change', (ev) => {
@@ -203,7 +203,7 @@ const updateBones = () => {
     middle3.rotation.x = (ev.value)
   })
 
-  hand.addInput(PARAMS, 'ring',
+  tab.pages[0].addInput(PARAMS, 'ring',
   {min: 0, max: 1.1, step: 0.01}
   )
   .on('change', (ev) => {
@@ -212,7 +212,7 @@ const updateBones = () => {
     ring3.rotation.x = (ev.value)
   })
 
-  hand.addInput(PARAMS, 'pinky',
+  tab.pages[0].addInput(PARAMS, 'pinky',
   {min: 0, max: 1.1, step: 0.01}
   )
   .on('change', (ev) => {
