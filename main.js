@@ -8,6 +8,23 @@ import {Pane} from 'tweakpane'
 const canvas = document.querySelector('canvas.webgl')
 
 // Pane
+const PARAMS = {
+  bg: '#6B6AB3',
+  hand: 0xE7A183,
+  shirt: 0x303030,
+  vest: 0xE7D55C,
+  wrist: 0.1,
+  thumb: 0.25,
+  index: 0.25,
+  middle: 1.1,
+  ring: 1.1,
+  pinky: 0.25,
+  thumbz: -0.36187393633342696, 
+  indexz: -0.3,
+  middlez: -0.08,
+  ringz: -0.22,
+  pinkyz: -0.52
+}
 const pane = new Pane({
   container: document.getElementById('pane'),
 })
@@ -17,31 +34,24 @@ const tab = pane.addTab({
     {title: 'Colors 🎨'},
   ],
 })
-const PARAMS = {
-  bg: 0x6B6AB3,
-  hand: 0xE7A183,
-  shirt: 0x303030,
-  vest: 0xE7D55C,
-  wrist: 0.1,
-  thumb: 0.25,
-  index: 0.25,
-  middle: 1.1,
-  ring: 1.1,
-  pinky: 0.25
-}
+const clench = tab.pages[0].addFolder({
+  title: 'Clench',
+});
+const stretch = tab.pages[0].addFolder({
+  title: 'Stretch (WIP)',
+  expanded: false
+});
 
 tab.pages[1].addInput(PARAMS, 'bg', {
   view: 'color',
   picker: 'inline',
   expanded: false,
 }).on('change', (ev) => {
-  scene.background.set(ev.value)
+  document.body.style.backgroundColor = ev.value;
 })
 
 // Scene
 const scene = new THREE.Scene()
-const bgColor = new THREE.Color(PARAMS.bg)
-scene.background = bgColor
 
 /**
  * Models
@@ -110,6 +120,8 @@ const updateMaterials = () => {
 }
 
 const updateBones = () => {
+  // console.log(scene.getObjectByName('Hand').skeleton)
+  
   const wrist = scene.getObjectByName('Hand').skeleton.bones[0]
   const wrist1 = scene.getObjectByName('Hand').skeleton.bones[1]
   const wrist2 = scene.getObjectByName('Hand').skeleton.bones[2]
@@ -131,6 +143,7 @@ const updateBones = () => {
   thumb1.rotation.x = PARAMS.thumb
   thumb2.rotation.x = PARAMS.thumb
   thumb3.rotation.x = PARAMS.thumb
+  thumb1.rotation.z = -0.36187393633342696
 
   const index1 = scene.getObjectByName('Hand').skeleton.bones[7]
   const index2 = scene.getObjectByName('Hand').skeleton.bones[8]
@@ -160,10 +173,9 @@ const updateBones = () => {
   pinky2.rotation.x = PARAMS.pinky
   pinky3.rotation.x = PARAMS.pinky
 
-  // console.log(scene.getObjectByName('Hand').skeleton)
-
   // PANE
-  tab.pages[0].addInput(PARAMS, 'wrist',
+  // Wrist
+  clench.addInput(PARAMS, 'wrist',
   {min: -0.4, max: 0.4, step: 0.01}
   )
   .on('change', (ev) => {
@@ -176,8 +188,8 @@ const updateBones = () => {
     wrist6.rotation.x = (ev.value)
   })
 
-
-  tab.pages[0].addInput(PARAMS, 'thumb',
+  // Thumb
+  clench.addInput(PARAMS, 'thumb',
   {min: 0, max: 0.9, step: 0.01}
   )
   .on('change', (ev) => {
@@ -186,7 +198,17 @@ const updateBones = () => {
     thumb3.rotation.x = (ev.value)
   })
 
-  tab.pages[0].addInput(PARAMS, 'index',
+  stretch.addInput(PARAMS, 'thumbz',
+  {min: -0.4, max: 0.3, step: 0.01}
+  )
+  .on('change', (ev) => {
+    thumb1.rotation.z = (ev.value)
+    thumb2.rotation.z = (ev.value)
+    thumb3.rotation.z = (ev.value)
+  })
+
+  // Index
+  clench.addInput(PARAMS, 'index',
   {min: 0, max: 1.1, step: 0.01}
   )
   .on('change', (ev) => {
@@ -195,8 +217,19 @@ const updateBones = () => {
     index3.rotation.x = (ev.value)
   })
 
-  tab.pages[0].addInput(PARAMS, 'middle',
-  {min: 0, max: 1.1, step: 0.01}
+  stretch.addInput(PARAMS, 'indexz',
+  {min: -0.5, max: 0, step: 0.01}
+  )
+  .on('change', (ev) => {
+    wrist3.position.x - (ev.value) * 0.1
+    index1.rotation.z = (ev.value)
+    index2.rotation.z = (ev.value) * 0.1
+    index3.rotation.z = (ev.value) * 0.1
+  })
+
+  // Middle
+  clench.addInput(PARAMS, 'middle',
+  {min: 0, max: 1.25, step: 0.01}
   )
   .on('change', (ev) => {
     middle1.rotation.x = (ev.value)
@@ -204,8 +237,20 @@ const updateBones = () => {
     middle3.rotation.x = (ev.value)
   })
 
-  tab.pages[0].addInput(PARAMS, 'ring',
-  {min: 0, max: 1.1, step: 0.01}
+  stretch.addInput(PARAMS, 'middlez',
+  {min: -0.35, max: 0.25, step: 0.01}
+  )
+  .on('change', (ev) => {
+    wrist4.position.x - (ev.value) * 0.1
+    wrist4.position.y - (ev.value) * 0.2
+    middle1.rotation.z = (ev.value)
+    middle2.rotation.z = (ev.value) * 0.1
+    middle3.rotation.z = (ev.value) * 0.2
+  })
+
+  // Ring
+  clench.addInput(PARAMS, 'ring',
+  {min: 0, max: 1.25, step: 0.01}
   )
   .on('change', (ev) => {
     ring1.rotation.x = (ev.value)
@@ -213,13 +258,35 @@ const updateBones = () => {
     ring3.rotation.x = (ev.value)
   })
 
-  tab.pages[0].addInput(PARAMS, 'pinky',
-  {min: 0, max: 1.1, step: 0.01}
+  stretch.addInput(PARAMS, 'ringz',
+  {min: -0.4, max: 0.2, step: 0.01}
+  )
+  .on('change', (ev) => {
+    wrist5.position.x + (ev.value) * 0.1
+    wrist5.position.y - (ev.value) * 0.1
+    ring1.rotation.z = -(ev.value)
+    ring2.rotation.z = -(ev.value) * 0.2
+    ring3.rotation.z = -(ev.value) * 0.2
+  })
+
+  // Pinky
+  clench.addInput(PARAMS, 'pinky',
+  {min: 0, max: 1.15, step: 0.01}
   )
   .on('change', (ev) => {
     pinky1.rotation.x = (ev.value)
     pinky2.rotation.x = (ev.value)
     pinky3.rotation.x = (ev.value)
+  })
+
+  stretch.addInput(PARAMS, 'pinkyz',
+  {min: -0.52, max: -0.25, step: 0.01}
+  )
+  .on('change', (ev) => {
+    wrist6.position.x + (ev.value) * 0.1
+    pinky1.rotation.z = -(ev.value)
+    pinky2.rotation.z = (ev.value) * 0.1
+    pinky3.rotation.z = (ev.value) * 0.1
   })
 }
 
@@ -261,11 +328,6 @@ const backSpotLight = new THREE.SpotLight(0xffffff)
 backSpotLight.position.set(5, 2, -5)
 scene.add(backSpotLight)
 
-// const helper = new THREE.SpotLightHelper( backSpotLight, 5 )
-// scene.add( helper )
-// const camerahelper = new THREE.CameraHelper( directionalLight.shadow.camera )
-// scene.add( camerahelper )
-
 /**
  * Sizes
  */
@@ -292,8 +354,6 @@ window.addEventListener('resize', () =>
 /**
  * Camera
  */
-
-// Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.set(0, 0, 5)
 scene.add(camera)
@@ -310,12 +370,37 @@ controls.maxDistance = 10
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
-  canvas: canvas
+  canvas: canvas,
+  alpha: true,
 })
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+/**
+ * Capture
+ */
+const capture = document.querySelector('#screenshot');
+
+capture.addEventListener('click', () => {
+  renderer.render(scene, camera)
+  canvas.toBlob((blob) => {
+    saveBlob(blob, `screencapture-${canvas.width}x${canvas.height}.png`)
+  })
+})
+
+const saveBlob = (function() {
+  const a = document.createElement('a')
+  document.body.appendChild(a)
+  a.style.display = 'none'
+  return function saveData(blob, fileName) {
+     const url = window.URL.createObjectURL(blob)
+     a.href = url
+     a.download = fileName
+     a.click()
+  }
+}())
 
 /**
  * Animate
