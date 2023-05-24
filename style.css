@@ -38,6 +38,8 @@ footer {
     bottom: 0.5rem;
     color:#fff;
     mix-blend-mode: difference;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 a {
@@ -68,9 +70,16 @@ a:hover {
     border-radius: 9999px;
     mix-blend-mode: difference;
     transition: all .3s;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 #screenshot:hover {
     background: #fff;
     color: #000;
+}
+
+#pane {
+    -webkit-user-select: none;
+    user-select: none;
 }
