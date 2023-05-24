@@ -47,11 +47,14 @@ tab.pages[1].addInput(PARAMS, 'bg', {
   picker: 'inline',
   expanded: false,
 }).on('change', (ev) => {
+  scene.background.set(ev.value)
   document.body.style.backgroundColor = ev.value;
 })
 
 // Scene
 const scene = new THREE.Scene()
+const bgColor = new THREE.Color(PARAMS.bg)
+scene.background = bgColor
 
 /**
  * Models
