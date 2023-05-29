@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Poppins&display=swap');
 
 * {
     margin: 0;
@@ -43,6 +43,7 @@ footer {
 }
 
 a {
+    font-family: 'IBM Plex Mono', monospace;
     text-decoration: none;
     color:#fff;
     border-bottom: .1rem solid #fff;
@@ -56,19 +57,24 @@ a:hover {
 button {
     padding: 0.75rem 1.5rem;
     display: inline-block;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.25rem;
     text-transform: uppercase;
     text-align: center;
     text-decoration: none;
-    color: #fff;
-    background: none;
-    border: 1px solid #fff;
+    color: #333;
+    background: #fff;
+    border: 2px solid #333;
     border-radius: 9999px;
-    mix-blend-mode: difference;
     transition: all .3s;
     -webkit-user-select: none;
     user-select: none;
+}
+
+button:hover {
+    background: #333;
+    color: #fff;
+    border: 2px solid #fff;
 }
 
 .poses {
@@ -85,15 +91,6 @@ button {
     top: 1rem;
     right: 1rem;
 }
-
-#screenshot:hover {
-    background: #fff;
-    color: #000;
-}
-
-/* #raised-hand {
-
-} */
 
 #pane {
     -webkit-user-select: none;

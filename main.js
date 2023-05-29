@@ -1,4 +1,3 @@
-import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
@@ -54,7 +53,7 @@ tab.pages[1].addInput(PARAMS, 'bg', {
   picker: 'inline',
   expanded: false,
 }).on('change', (ev) => {
-  scene.background.set(ev.value)
+  scene.background = new THREE.Color(ev.value)
   document.body.style.backgroundColor = ev.value;
 })
 
@@ -69,19 +68,23 @@ gltfLoader.load(
   {
     scene.add(gltf.scene.children[0])
     
-    updateMaterials()
-    updateBones()
+    setMaterials()
+    setBones()
   }
 )
 
-const updateMaterials = () => {
+// Materials
+const handMaterial = new THREE.MeshToonMaterial()
+const shirtMaterial = new THREE.MeshToonMaterial()
+const vestMaterial = new THREE.MeshToonMaterial()
+
+const setMaterials = () => {
   const textureLoader = new THREE.TextureLoader()
   const gradientTexture = textureLoader.load('3.jpg')
   gradientTexture.minFilter = THREE.NearestFilter
   gradientTexture.magFilter = THREE.NearestFilter
   gradientTexture.generateMipmaps = false
 
-  const handMaterial = new THREE.MeshToonMaterial()
   handMaterial.color = new THREE.Color(PARAMS.hand)
   handMaterial.gradientMap = gradientTexture
   handMaterial.roughness = 0.7
@@ -89,16 +92,13 @@ const updateMaterials = () => {
   handMaterial.emissiveIntensity = 0.2
   scene.getObjectByName('Hand').material = handMaterial
 
-  const shirtMaterial = new THREE.MeshToonMaterial()
   shirtMaterial.color = new THREE.Color(PARAMS.shirt)
   shirtMaterial.gradientMap = gradientTexture
   scene.getObjectByName('Shirt').material = shirtMaterial
 
-  const vestMaterial = new THREE.MeshToonMaterial()
   vestMaterial.color = new THREE.Color(PARAMS.vest)
   vestMaterial.gradientMap = gradientTexture
   scene.getObjectByName('Vest').material = vestMaterial
-
 
   // Pane
   tab.pages[1].addInput(PARAMS, 'hand', {
@@ -125,9 +125,7 @@ const updateMaterials = () => {
   })
 }
 
-const updateBones = () => {
-  // console.log(scene.getObjectByName('Hand').skeleton)
-  
+const setBones = () => {
   const wrist = scene.getObjectByName('Hand').skeleton.bones[0]
   const wrist1 = scene.getObjectByName('Hand').skeleton.bones[1]
   const wrist2 = scene.getObjectByName('Hand').skeleton.bones[2]
@@ -285,10 +283,15 @@ const updateBones = () => {
 
   raisedHand.addEventListener('click', () => {
     const tlRaisedHand = GSAP.timeline()
+    let bgColor = new THREE.Color(0xbcbcbc)
+    let handColor = new THREE.Color(0xc5c5c5)
+    let shirtColor = new THREE.Color(0x666666)
+    let vestColor = new THREE.Color(0x191919)
 
     tlRaisedHand
       .to(PARAMS, {
         duration: 0,
+        bg: 0xbcbcbc, hand: 0xc5c5c5, shirt: 0x666666, vest: 0x191919,
         wrist: 0,
         thumb: 0, index: 0, middle: 0, ring: 0, pinky: 0,
         thumbz: -0.15, indexz: -0.30, middlez: -0.08, ringz: -0.22, pinkyz: -0.52,
@@ -304,6 +307,11 @@ const updateBones = () => {
       .to(middleRotation[0], { duration: 0.5, z: -0.08 }, 'same')
       .to(ringRotation[0], { duration: 0.5, z: 0.22 }, 'same')
       .to(pinkyRotation[0], { duration: 0.5, z: 0.52 }, 'same')
+      .to(scene.background, { duration: 0.5, r: bgColor.r, g: bgColor.g, b: bgColor.b  }, 'same')
+      .to(handMaterial.color, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(handMaterial.emissive, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(shirtMaterial.color, { duration: 0.5, r: shirtColor.r, g: shirtColor.g, b: shirtColor.b  }, 'same')
+      .to(vestMaterial.color, { duration: 0.5, r: vestColor.r, g: vestColor.g, b: vestColor.b  }, 'same')
       .call(() => {
         pane.refresh()
       })
@@ -312,10 +320,15 @@ const updateBones = () => {
 
   raisedFinger.addEventListener('click', () => {
     const tlRaisedFinger = GSAP.timeline()
+    let bgColor = new THREE.Color(0xaf5f54)
+    let handColor = new THREE.Color(0xe7a183)
+    let shirtColor = new THREE.Color(0xc7d2eb)
+    let vestColor = new THREE.Color(0x274479)
 
     tlRaisedFinger
       .to(PARAMS, {
         duration: 0,
+        bg: 0xaf5f54, hand: 0xe7a183, shirt: 0xc7d2eb, vest: 0x274479,
         wrist: 0,
         thumb: 0.9, index: 0, middle: 1.25, ring: 1.25, pinky: 1.15,
         thumbz: -0.15, indexz: -0.30, middlez: -0.08, ringz: -0.22, pinkyz: -0.52,
@@ -331,6 +344,11 @@ const updateBones = () => {
       .to(middleRotation[0], { duration: 0.5, z: -0.08 }, 'same')
       .to(ringRotation[0], { duration: 0.5, z: 0.22 }, 'same')
       .to(pinkyRotation[0], { duration: 0.5, z: 0.52 }, 'same')
+      .to(scene.background, { duration: 0.5, r: bgColor.r, g: bgColor.g, b: bgColor.b  }, 'same')
+      .to(handMaterial.color, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(handMaterial.emissive, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(shirtMaterial.color, { duration: 0.5, r: shirtColor.r, g: shirtColor.g, b: shirtColor.b  }, 'same')
+      .to(vestMaterial.color, { duration: 0.5, r: vestColor.r, g: vestColor.g, b: vestColor.b  }, 'same')
       .call(() => {
         pane.refresh()
       })
@@ -339,10 +357,15 @@ const updateBones = () => {
 
   rockOn.addEventListener('click', () => {
     const tlRockOn = GSAP.timeline()
+    let bgColor = new THREE.Color(0x4b46b2)
+    let handColor = new THREE.Color(0xe7a183)
+    let shirtColor = new THREE.Color(0x303030)
+    let vestColor = new THREE.Color(0xe7d55c)
 
     tlRockOn
       .to(PARAMS, {
         duration: 0,
+        bg: 0x4b46b2, hand: 0xe7a183, shirt: 0x303030, vest: 0xe7d55c,
         wrist: 0.1,
         thumb: 0.25, index: 0.25, middle: 1.1, ring: 1.1, pinky: 0.25,
         thumbz: -0.15, indexz: -0.30, middlez: -0.08, ringz: -0.22, pinkyz: -0.52,
@@ -358,6 +381,11 @@ const updateBones = () => {
       .to(middleRotation[0], { duration: 0.5, z: -0.08 }, 'same')
       .to(ringRotation[0], { duration: 0.5, z: 0.22 }, 'same')
       .to(pinkyRotation[0], { duration: 0.5, z: 0.52 }, 'same')
+      .to(scene.background, { duration: 0.5, r: bgColor.r, g: bgColor.g, b: bgColor.b  }, 'same')
+      .to(handMaterial.color, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(handMaterial.emissive, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(shirtMaterial.color, { duration: 0.5, r: shirtColor.r, g: shirtColor.g, b: shirtColor.b  }, 'same')
+      .to(vestMaterial.color, { duration: 0.5, r: vestColor.r, g: vestColor.g, b: vestColor.b  }, 'same')
       .call(() => {
         pane.refresh()
       })
@@ -366,10 +394,15 @@ const updateBones = () => {
 
   peace.addEventListener('click', () => {
     const tlPeace = GSAP.timeline()
+    let bgColor = new THREE.Color(0xe2ceab)
+    let handColor = new THREE.Color(0x624122)
+    let shirtColor = new THREE.Color(0xccb4a2)
+    let vestColor = new THREE.Color(0xbf6f30)
 
     tlPeace
       .to(PARAMS, {
         duration: 0,
+        bg: 0xe2ceab, hand: 0x624122, shirt: 0xccb4a2, vest: 0xbf6f30,
         wrist: 0,
         thumb: 0.9, index: 0, middle: 0, ring: 1.25, pinky: 1.15,
         thumbz: -0.15, indexz: -0.03, middlez: -0.23, ringz: -0.22, pinkyz: -0.52,
@@ -385,6 +418,11 @@ const updateBones = () => {
       .to(middleRotation[0], { duration: 0.5, z: -0.23 }, 'same')
       .to(ringRotation[0], { duration: 0.5, z: 0.22 }, 'same')
       .to(pinkyRotation[0], { duration: 0.5, z: 0.52 }, 'same')
+      .to(scene.background, { duration: 0.5, r: bgColor.r, g: bgColor.g, b: bgColor.b  }, 'same')
+      .to(handMaterial.color, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(handMaterial.emissive, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(shirtMaterial.color, { duration: 0.5, r: shirtColor.r, g: shirtColor.g, b: shirtColor.b  }, 'same')
+      .to(vestMaterial.color, { duration: 0.5, r: vestColor.r, g: vestColor.g, b: vestColor.b  }, 'same')
       .call(() => {
         pane.refresh()
       })
@@ -393,10 +431,15 @@ const updateBones = () => {
 
   hangLoose.addEventListener('click', () => {
     const tlHangLoose = GSAP.timeline()
+    let bgColor = new THREE.Color(0x1389d8)
+    let handColor = new THREE.Color(0xb69621)
+    let shirtColor = new THREE.Color(0xbbdae8)
+    let vestColor = new THREE.Color(0xbf3131)
 
     tlHangLoose
       .to(PARAMS, {
         duration: 0,
+        bg: 0x1389d8, hand: 0xb69621, shirt: 0xbbdae8, vest: 0xbf3131,
         wrist: 0,
         thumb: 0, index: 1.1, middle: 1.25, ring: 1.25, pinky: 0,
         thumbz: -0.04, indexz: -0.30, middlez: -0.08, ringz: -0.22, pinkyz: -0.25,
@@ -412,6 +455,11 @@ const updateBones = () => {
       .to(middleRotation[0], { duration: 0.5, z: -0.08 }, 'same')
       .to(ringRotation[0], { duration: 0.5, z: 0.22 }, 'same')
       .to(pinkyRotation[0], { duration: 0.5, z: 0.25 }, 'same')
+      .to(scene.background, { duration: 0.5, r: bgColor.r, g: bgColor.g, b: bgColor.b  }, 'same')
+      .to(handMaterial.color, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(handMaterial.emissive, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(shirtMaterial.color, { duration: 0.5, r: shirtColor.r, g: shirtColor.g, b: shirtColor.b  }, 'same')
+      .to(vestMaterial.color, { duration: 0.5, r: vestColor.r, g: vestColor.g, b: vestColor.b  }, 'same')
       .call(() => {
         pane.refresh()
       })
@@ -420,10 +468,15 @@ const updateBones = () => {
 
   fu.addEventListener('click', () => {
     const tlFu = GSAP.timeline()
+    let bgColor = new THREE.Color(0x156259)
+    let handColor = new THREE.Color(0xc1b7e5)
+    let shirtColor = new THREE.Color(0x568f46)
+    let vestColor = new THREE.Color(0x822bc2)
 
     tlFu
       .to(PARAMS, {
         duration: 0,
+        bg: 0x156259, hand: 0xc1b7e5, shirt: 0x568f46, vest: 0x822bc2,
         wrist: 0,
         thumb: 0.9, index: 1.1, middle: 0, ring: 1.25, pinky: 1.15,
         thumbz: -0.15, indexz: -0.30, middlez: -0.08, ringz: -0.22, pinkyz: -0.52,
@@ -439,6 +492,12 @@ const updateBones = () => {
       .to(middleRotation[0], { duration: 0.5, z: -0.08 }, 'same')
       .to(ringRotation[0], { duration: 0.5, z: 0.22 }, 'same')
       .to(pinkyRotation[0], { duration: 0.5, z: 0.52 }, 'same')
+      .to(document.body, { duration: 0.5, backgroundColor: bgColor  }, 'same')
+      .to(scene.background, { duration: 0.5, r: bgColor.r, g: bgColor.g, b: bgColor.b  }, 'same')
+      .to(handMaterial.color, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(handMaterial.emissive, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(shirtMaterial.color, { duration: 0.5, r: shirtColor.r, g: shirtColor.g, b: shirtColor.b  }, 'same')
+      .to(vestMaterial.color, { duration: 0.5, r: vestColor.r, g: vestColor.g, b: vestColor.b  }, 'same')
       .call(() => {
         pane.refresh()
       })
@@ -447,10 +506,15 @@ const updateBones = () => {
 
   vulcanSalute.addEventListener('click', () => {
     const tlVulcanSalute = GSAP.timeline()
+    let bgColor = new THREE.Color(0x000000)
+    let handColor = new THREE.Color(0x1c7f56)
+    let shirtColor = new THREE.Color(0x922323)
+    let vestColor = new THREE.Color(0xb1c8c2)
 
     tlVulcanSalute
       .to(PARAMS, {
         duration: 0,
+        bg: 0x000000, hand: 0x1c7f56, shirt: 0x922323, vest: 0xb1c8c2,
         wrist: 0,
         thumb: 0, index: 0, middle: 0, ring: 0, pinky: 0,
         thumbz: 0.08, indexz: -0.05, middlez: 0.22, ringz: 0.04, pinkyz: -0.34,
@@ -466,6 +530,11 @@ const updateBones = () => {
       .to(middleRotation[0], { duration: 0.5, z: 0.22 }, 'same')
       .to(ringRotation[0], { duration: 0.5, z: -0.04 }, 'same')
       .to(pinkyRotation[0], { duration: 0.5, z: 0.34 }, 'same')
+      .to(scene.background, { duration: 0.5, r: bgColor.r, g: bgColor.g, b: bgColor.b  }, 'same')
+      .to(handMaterial.color, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(handMaterial.emissive, { duration: 0.5, r: handColor.r, g: handColor.g, b: handColor.b  }, 'same')
+      .to(shirtMaterial.color, { duration: 0.5, r: shirtColor.r, g: shirtColor.g, b: shirtColor.b  }, 'same')
+      .to(vestMaterial.color, { duration: 0.5, r: vestColor.r, g: vestColor.g, b: vestColor.b  }, 'same')
       .call(() => {
         pane.refresh()
       })
@@ -503,8 +572,8 @@ window.addEventListener('resize', () =>
   camera.updateProjectionMatrix()
 
   // Update renderer
-  renderer.setSize(sizes.width, sizes.height)
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  outlineEffect.setSize(sizes.width, sizes.height)
+  outlineEffect.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
 /**
@@ -539,7 +608,7 @@ const outlineEffect = new OutlineEffect(renderer, {
   defaultColor: [ 0, 0, 0 ],
   defaultAlpha: 0.8,
   defaultKeepAlive: true
-}); 
+})
 
 /**
  * Capture
@@ -547,7 +616,7 @@ const outlineEffect = new OutlineEffect(renderer, {
 const saveImage = document.querySelector('#screenshot')
 
 saveImage.addEventListener('click', () => {
-  renderer.render(scene, camera)
+  outlineEffect.render(scene, camera)
   canvas.toBlob((blob) => {
     saveBlob(blob, `screencapture-${canvas.width}x${canvas.height}.png`)
   })
