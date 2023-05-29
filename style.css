@@ -75,7 +75,7 @@ button {
 button:hover {
     background: #333;
     color: #fff;
-    border: 2px solid #fff;
+    border-color: #fff;
 }
 
 .poses {
@@ -101,3 +101,11 @@ button:hover {
     -webkit-user-select: none;
     user-select: none;
 }
+
+@media only screen and (max-width: 720px) {
+    button {
+        font-size: 0.75rem;
+        border: 1px solid #333;
+        padding: 0.5rem 1rem;
+    }
+  }
