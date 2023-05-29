@@ -50,8 +50,8 @@ const hangLoose = document.querySelector('#hang-loose')
 const fu = document.querySelector('#fu')
 const vulcanSalute = document.querySelector('#vulcan-salute')
 
-const centerThresholdX = 10// 20% of window.innerWidth
-const centerThresholdY = 20 // 20% of window.innerHeight
+const centerThresholdX = 10
+const centerThresholdY = 20
 
 const getRandomPosition = () => {
   const x = Math.random() * (100 - centerThresholdX * 2) + centerThresholdX
@@ -64,22 +64,20 @@ const getRandomRotation = () => {
 }
 
 const placeButtonRandomly = (button) => {
-  const position = getRandomPosition();
-  const rotation = getRandomRotation();
-  button.style.left = `${position.x}%`;
-  button.style.top = `${position.y}%`;
-  button.style.transform = `rotate(${rotation}deg)`;
+  const position = getRandomPosition()
+  const rotation = getRandomRotation()
+  button.style.left = `${position.x}%`
+  button.style.top = `${position.y}%`
+  button.style.transform = `rotate(${rotation}deg)`
 }
 
-placeButtonRandomly(raisedHand);
-placeButtonRandomly(raisedFinger);
-placeButtonRandomly(rockOn);
-placeButtonRandomly(peace);
-placeButtonRandomly(hangLoose);
-placeButtonRandomly(fu);
-placeButtonRandomly(vulcanSalute);
-
-console.log(raisedHand);
+placeButtonRandomly(raisedHand)
+placeButtonRandomly(raisedFinger)
+placeButtonRandomly(rockOn)
+placeButtonRandomly(peace)
+placeButtonRandomly(hangLoose)
+placeButtonRandomly(fu)
+placeButtonRandomly(vulcanSalute)
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
