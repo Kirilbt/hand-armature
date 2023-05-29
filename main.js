@@ -17,6 +17,7 @@ const tab = pane.addTab({
 })
 const clench = tab.pages[0].addFolder({
   title: 'Clench',
+  expanded: false
 });
 const spread = tab.pages[0].addFolder({
   title: 'Spread (WIP)',
