@@ -5,9 +5,6 @@ import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect.js'
 import GSAP from 'gsap'
 import {Pane} from 'tweakpane'
 
-// Canvas
-const canvas = document.querySelector('canvas.webgl')
-
 // Pane
 const pane = new Pane({
   container: document.getElementById('pane'),
@@ -42,6 +39,47 @@ const PARAMS = {
   ringz: -0.22,
   pinkyz: -0.52
 }
+
+// Buttons
+const raisedHand = document.querySelector('#raised-hand')
+const raisedFinger = document.querySelector('#raised-finger')
+const rockOn = document.querySelector('#rock-on')
+const peace = document.querySelector('#peace')
+const hangLoose = document.querySelector('#hang-loose')
+const fu = document.querySelector('#fu')
+const vulcanSalute = document.querySelector('#vulcan-salute')
+
+const centerThresholdX = 200
+const centerThresholdY = 100
+
+const getRandomPosition = () => {
+  const x = Math.floor(Math.random() * (window.innerWidth - centerThresholdX * 2)) + centerThresholdX;
+  const y = Math.floor(Math.random() * (window.innerHeight - centerThresholdY * 2)) + centerThresholdY;
+  return { x, y };
+}
+
+const getRandomRotation = () => {
+  return Math.floor(Math.random() * 91) - 45;
+}
+
+const placeButtonRandomly = (button) => {
+  const position = getRandomPosition()
+  const rotation = getRandomRotation()
+  button.style.left = `${position.x}px`
+  button.style.top = `${position.y}px`
+  button.style.transform = `rotate(${rotation}deg)`
+}
+
+placeButtonRandomly(raisedHand)
+placeButtonRandomly(raisedFinger)
+placeButtonRandomly(rockOn)
+placeButtonRandomly(peace)
+placeButtonRandomly(hangLoose)
+placeButtonRandomly(fu)
+placeButtonRandomly(vulcanSalute)
+
+// Canvas
+const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
@@ -266,13 +304,6 @@ const setBones = () => {
   /**
    * Poses
    */
-  const raisedHand = document.querySelector('#raised-hand')
-  const raisedFinger = document.querySelector('#raised-finger')
-  const rockOn = document.querySelector('#rock-on')
-  const peace = document.querySelector('#peace')
-  const hangLoose = document.querySelector('#hang-loose')
-  const fu = document.querySelector('#fu')
-  const vulcanSalute = document.querySelector('#vulcan-salute')
 
   const wristRotation = [wrist.rotation, wrist1.rotation, wrist2.rotation, wrist3.rotation, wrist4.rotation, wrist5.rotation, wrist6.rotation]
   const thumbRotation = [thumb1.rotation, thumb2.rotation, thumb3.rotation]
