@@ -6,7 +6,8 @@ Small experiment using Blender's armature/skeleton feature mixed with Three.JS t
 
 
 ## Overview
-![hand-examples](https://github.com/Kirilbt/hand-armature/assets/98451613/eebbdc4a-8024-40dd-ae53-de37d9879bf7)
+![hand-examples](https://github.com/Kirilbt/hand-armature/assets/98451613/83b8ebd5-6dcc-4235-b456-37b71b7687ac)
+
 
 ### Process <a name="process"></a>
 
@@ -28,6 +29,7 @@ The hand was created on Blender thanks to **[sens_3d's tutorial on YouTube](http
 
 - HTML, CSS, Javascript
 - Three.js
+- GSAP
 - Vite
 - Blender
 
